@@ -71,7 +71,7 @@ if __name__=='__main__':
             assert len(row) == w, 'column is invalid'
             board.extend(row)
 
-        if len(board)-sum(board)%3 == 0:
+        if (len(board)-sum(board))%3 == 0:
             bc = BoardCover(h, w)
             done = bc.cover(board)
             print(bc.num)
