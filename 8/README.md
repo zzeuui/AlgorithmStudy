@@ -64,3 +64,32 @@
 
 ## 예제: 외발 뛰기 (문제 ID: JUMPGAME, 난이도: 하)
 
+문제
+- NxN 크기의 격자에 1부터 9까지의 정수를 쓴 게임판
+- 각 칸에 적혀 있는 숫자만큼 아래쪽이나 오른쪽으로 이동 가능
+- 왼쪽 위 칸에서 시작해서 게임판의 오른쪽 아래칸에 도착할 수 있는지 여부 판단(true / false 문제)
+
+재귀 호출
+```
+int n, board[100][100];
+bool jump(int y, int x){
+  int jumpSize = board[y][x];
+  return jump(y+jumpSize, x) || jump(y, x+jumpSize)
+}
+```
+
+동적 계획법
+```
+int n, board[100][100];
+int cache[100][100];
+bool jump2(int y, int x){
+  int& ret = cache[y][x];
+  if(ret != -1) return ret;
+  int jumpSize = board[y][x];
+  return ret = jump(y+jumpSize, x) || jump(y, x+jumpSize)
+}
+```
+
+동적계획법 레시피
+- 주어진 문제를 완전 탐색으로 해결
+- 중복된 부분 문제를 한 번만 계산하도록 
