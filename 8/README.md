@@ -77,8 +77,8 @@ bool jump(int y, int x){
   return jump(y+jumpSize, x) || jump(y, x+jumpSize)
 }
 ```
-
 동적 계획법
+#### 입력의 개수가 n*n으로 제한됨 
 ```
 int n, board[100][100];
 int cache[100][100];
