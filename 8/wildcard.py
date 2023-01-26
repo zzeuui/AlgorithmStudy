@@ -57,7 +57,6 @@ def check_word(wild, file_name):
     else:
         return False
 
-
 if __name__=='__main__':
     case_n = int(input())
 
