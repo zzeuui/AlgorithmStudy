@@ -1,3 +1,4 @@
+"""
 #timeout
 
 from copy import deepcopy
@@ -25,3 +26,16 @@ if __name__ == '__main__':
         n, k = map(int, input().split(' '))
         people = [i for i in range(n)]
         kill(people)
+"""
+
+if __name__ == '__main__':
+    for _ in range(int(input())):
+        n, k = map(int, input().split(' '))
+        people = [i for i in range(1, n+1)]
+        j = 0
+        while len(people) > 2:
+            people.pop(j)
+            j = (j + k -1) % len(people)
+
+        print(people[0], people[1])
+
