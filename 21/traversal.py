@@ -63,7 +63,7 @@ if __name__=='__main__':
 
         n = int(input())
 
-        frt = list(map(str, input().split(' ')))
-        mid = list(map(str, input().split(' ')))
+        frt = input().split(' ')
+        mid = input().split(' ')
 
         split_tree(frt, mid)
