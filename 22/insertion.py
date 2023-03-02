@@ -1,5 +1,43 @@
-# c++: https://damper.tistory.com/37
+# 정석 c++: https://damper.tistory.com/37
+"""
+#파이썬과 같이 배열로 푼 c++ 답
+#include <iostream>
 
+#include <deque>
+
+using namespace std;
+
+int main() {
+    ios::sync_with_stdio(false);
+    int nCases;
+    cin >> nCases;
+
+    while (nCases--) {
+        int n;
+        cin >> n;
+        deque<int> seq(n);
+        for (int i = 0; i < n; i++) 
+            seq[i] = i;
+        for (int i = 0; i < n; i++) {
+            int moves;
+            cin >> moves;
+            auto it = seq.begin() + i;
+            seq.insert(it - moves, seq[i]);
+            seq.erase(seq.begin() + i + 1);
+        }
+        int *arr = new int[n];
+        for (int i = 0; i < n; i++) 
+            arr[seq[i]] = i+1;
+        
+        cout << arr[0];
+        for (int i = 1; i<n; i++)
+            cout << " " << arr[i];
+        cout << '\n';
+        
+    }
+    return 0;
+}
+"""
 import sys
 input = sys.stdin.readline
 
