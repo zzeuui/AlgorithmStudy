@@ -1,6 +1,6 @@
 #bisect: 점프투파이썬 - https://wikidocs.net/105425
 #bisect document: https://docs.python.org/ko/3/library/bisect.html
-"""
+
 from sys import stdin
 from bisect import insort_left
 
@@ -15,7 +15,8 @@ if __name__=='__main__':
             temp = (temp * a + b) % 20090711
             insort_left(A, temp) #이진 분할 알고리즘으로 정렬된 리스트를 구성
         print(ans%20090711)
-"""
+
+#heapq document: https://docs.python.org/ko/3/library/heapq.html 
 import heapq
 
 def main():
@@ -45,6 +46,7 @@ def main():
             cur = (cur * a + b) % 20090711
 
         print((ans) % 20090711)
-
+"""
 if __name__ == '__main__':
     main()
+"""
