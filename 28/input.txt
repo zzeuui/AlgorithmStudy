@@ -22,3 +22,10 @@ this
 invalid
 ogklhabcdefijmnpqrstuvwxyz
 abcdefghijklmnopqrstuvwxyz
+
+1
+4
+dog
+god
+dragon
+need
