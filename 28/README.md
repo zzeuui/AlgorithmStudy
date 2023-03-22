@@ -3,7 +3,7 @@
 - 현재 정점과 인접한 간선들을 하나씩 검사하다가, 아직 방문하지 않은 정점으로 가는 간선을 선택하여 계속 탐색 진행. 막힌 정점에 도달하면 이전 경로로 돌아감
 ```
 int adj = [[]] #인접 리스트 표현
-bool visited = [false*len(adj)] #정점의 방문 여부
+bool visited = [false]*len(adj) #정점의 방문 여부
 
 def dfs(int here):
   visited[here] = true
