@@ -85,3 +85,73 @@ def dfsAll():
    - 다리는 항상 트리 간선이기 때문에, 트리 간선만 다리인지 판단하면 됨
    - (u, v)가 다리이기 위해서는, v와 v의 서브트리에서 역방향 간선으로 u보다 높은 정점에 갈 수 없어야함  
    $\Rightarrow$ v와 그 자손들에서 역방향 간선으로 닿을 수 있는 정점의 최소 발견 순서가 u 후라면 (u, v)는 다리임
+ 
+3. 강결합 컴포넌트 분리(strongly connected components, SCC)
+   - 방향 그래프의 두 정점 u와 v에 대해 양 방향으로 가는 경로가 모두 있을 때 두 정점은 같은 SCC
+   - SCC들을 정점으로 하고 SCC 사이를 연결하는 간선으로 DAG를 생성할 수 있음  
+   $\Rightarrow$ 각 SCC를 표현하는 정점들을 갖는 새로운 그래프로 기존 그래프를 압축(condensation)을 할 수 있음
+   - 타잔(Tarjan) 알고리즘
+   1. 깊이 우선 탐색 수행으로 DFS 스패닝 트리 생성
+   2. 트리간선 (u, v)가 존재할 때, v를 루트로 하는 서브트리에서 v보다 먼저 발견된 정점으로 가는 역방향 간선이 있으면 (u, v)를 절단하면 안됨
+   3. 역방향 간선이 없더라도, v보다 먼저 발견되었으면서 SCC로 묶여 있지 않은 정점으로 가는 교차 간선이 있으면 (u, v)를 절단하면 안됨
+   ```
+    import sys
+    import collections
+
+    input = sys.stdin.readline
+    sys.setrecursionlimit(10**7)
+
+    th = 0
+    sccCounter = 0
+
+    def scc(here):
+      global th, sccCounter
+      
+      #현재 노드가 몇번째로 발견되었는지 기록 
+      discovered[here] = th
+      th += 1
+      cur = discovered[here]
+      
+      # stack에 현재 노드를 넣고,
+      # 현재 노드의 후손들은 모두 현재 노드 이후에 스택에 들어감 
+      stack.append(here)
+
+      for next_node in G[here]:
+          #방문한 적이 없는 노드라면 탐색함 ==> (here, next_node)는 트리간선이 됨
+          if discovered[next_node] == -1: 
+              parent = min(cur, scc(next_node))
+          #elif: 이미 DFS로 방문한 적은 있지만, 다시 방문한 노드 즉, 현재 노드와 교차 간선일 경우 
+          #on_stack[next_node] == -1: 그리고 SCC에 포함되지 않을 경우
+          #here과 next_node 중 누가 먼저 발견되었는지 검사
+          elif on_stack[next_node] == -1: 
+              parent = min(cur, discovered[next_node])
+              
+      # 1. 트리간선으로 연결된 정점들 중 가장 먼저 발견되었을 때
+      # 2. 교차 간선을 검사했을 때 현재 노드가 가장 먼저 발견되었을 때
+      if parent == cur:
+          while True:
+              t = stack.pop() #스택에 있는 모든 후손과 자신을 차례로
+              on_stack[t] = sccCounter #SCC에 포함함. sccCounter는 현재 몇번째 SCC인지 구분하기 위해 사용
+              if t == here:
+                  break
+
+          sccCounter += 1
+
+      return parent
+
+    if __name__=='__main__':
+      V, E = map(int, input().rstrip().split())
+      G = collections.defaultdict(list)
+
+      for _ in range(E):
+          u, v = map(int, input().rstrip().split())
+          G[u].append(v)
+
+      discovered = [-1]*V
+      on_stack = [-1]*V
+      stack = list()
+
+      for i in range(V):
+          if discovered[i] == -1:
+              scc(i)
+   ```
