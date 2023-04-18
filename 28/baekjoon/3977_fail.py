@@ -52,6 +52,7 @@ if __name__=='__main__':
             if discovered[i] == -1:
                 scc(i)
 
+        on_stack = [abs(s-sccCnt+1) for s in on_stack]
         indegree = [0]*(sccCnt)
 
         for i in range(V):
