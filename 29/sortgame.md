@@ -39,7 +39,7 @@ def bfs(perm):
         part_re = here[:i] + list(reversed(here[i:j])) + here[j:]
         if distance[str(part_re)] == 0:
           distance[str(part_re)] = cost + 1
-          q.append(here)
+          q.append(part_re)
           
   return -1 
 ```
@@ -55,3 +55,36 @@ def bfs(perm):
     - 배열의 최대 길이 n이 주어졌을 때, 정렬된 배열 [0] or [0, ..., n-1]에서 다른 모든 상태까지 도달하는 데 필요한 뒤집기 연산 수를 미리 계산함
     - 입력받은 배열을 상대적 크기를 유지하며 배열의 요소를 0과 n-1 사이의 값이 되도록 변환
     - 미리 계산한 연산 수 반환
+```
+from collections import defaultdict
+
+to_sort = defaultdict(int)
+
+def precalc(n):
+   perm = [ i for i in range(n) ]
+   
+   q = list()
+   q.append(perm)
+   to_sort[str(perm)]
+   
+   while q:
+      here = q.pop(0)
+      cost = to_sort[str(here)]
+      for i in range(n):
+         for j in range(i+2, n+1):
+            part_re = here[:i] + list(reversed(here[i:j])) + here[j:]
+            if to_sort[str(part_re)] == 0:
+               to_sort[str(part_re)] = cost + 1
+               q.append(part_re)
+               
+def solve(perm):
+   n = len(perm)
+   fixed = [-1]*n
+   for i in range(n):
+      smaller = 0
+      for j in range(n):
+         if perm[j] < perm[i]: smaller += 1
+      fixed[i] = smaller
+      
+   return to_sort[str(fixed)]
+```
