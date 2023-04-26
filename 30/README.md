@@ -87,4 +87,4 @@
             if cost < distance[next_node]:
                distance[next_node] = cost
    ```
-- 위 두 코드에 대한 자세한 설명: https://doing7.tistory.com/76 
+- 코드에 대한 자세한 설명: https://doing7.tistory.com/76 
