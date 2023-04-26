@@ -47,44 +47,44 @@
 
    ```
 - 방문 여부 확인과 함께 우선순위 큐 없이 구현
-```
-INF = int(le9)
-import collections
+   ```
+   INF = int(le9)
+   import collections
 
-#{'node1':[['node2', dist], ...] ...}
-graph = collections.defaultdict(list)
-visted = {k: False for k in list(graph.keys())}
-distance = {k: INF for k in list(graph.keys())}
+   #{'node1':[['node2', dist], ...] ...}
+   graph = collections.defaultdict(list)
+   visted = {k: False for k in list(graph.keys())}
+   distance = {k: INF for k in list(graph.keys())}
 
-def get_smallest_node():
-   min_v = INF
-   index = 0
-   for k in list(graph.keys()):
-      if distance[k] < min_v and not visited[k]:
-         min_v = distance[k]
-         index = k
-   return k, min_v
-   
- def dijkstra(start):
-   #시작 정점
-   distance[start] = 0
-   visited[start] = True
-   
-   #시작정점 인접한 정점에 대한 거리 갱신
-   for next_node, next_dist in graph[start]:
-      distance[next_node] = next_dist
-   
-   #시작 정점 이외의 다른 모든 노드 방문
-   while True:
-      now, min_v = get_smallest_node()
-      
-      #모든 정점을 방문해 min_v가 갱신되지 않았을 때 종료
-      if min_v == INF: break
-      
-      visited[now] = True
-      for next_node, next_dist in graph[now]:
-         cost = distance[now] + next_dist
-         if cost < distance[next_node]:
-            distance[next_node] = cost
-```
+   def get_smallest_node():
+      min_v = INF
+      index = 0
+      for k in list(graph.keys()):
+         if distance[k] < min_v and not visited[k]:
+            min_v = distance[k]
+            index = k
+      return k, min_v
+
+    def dijkstra(start):
+      #시작 정점
+      distance[start] = 0
+      visited[start] = True
+
+      #시작정점 인접한 정점에 대한 거리 갱신
+      for next_node, next_dist in graph[start]:
+         distance[next_node] = next_dist
+
+      #시작 정점 이외의 다른 모든 노드 방문
+      while True:
+         now, min_v = get_smallest_node()
+
+         #모든 정점을 방문해 min_v가 갱신되지 않았을 때 종료
+         if min_v == INF: break
+
+         visited[now] = True
+         for next_node, next_dist in graph[now]:
+            cost = distance[now] + next_dist
+            if cost < distance[next_node]:
+               distance[next_node] = cost
+   ```
 - 위 두 코드에 대한 자세한 설명: https://doing7.tistory.com/76 
