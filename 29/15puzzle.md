@@ -51,7 +51,33 @@
 
 - 점점 깊어지는 탐색(IDS, Iteratively Deepening Search)
    - 임의의 깊이 제한 $l$을 정한 후, 이 제한보다 짧은 목표 상태까지의 최단 경로가 존재하는지 DFS로 확인. 답을 찾지 못하면 $l$을 늘려서 다시 시도
+   - BFS는 방문할 정점 목록을 저장해 메모리 사용량이 높지만, DFS는 발견 즉시 정점을 방문함
+   - 효율성 평가
+      - 메모리를 적게 사용하면서, 최단 거리보다 먼 정점들을 탐색하지 않음
+      - 그러나 깊이 제한을 늘려 가며 DFS를 반복 수행하면 한 정점을 
    - 구현
    ```
+   class State;
+   int best;
    
+   void dfs(State here, const State& finish, int steps){
+      //지금까지 구한 최단 경로보다 더 좋을 가능성이 없으면 버림
+      if(steps >= best) return;
+      //목표 정점에 도달한 경우
+      if(here == finish) { best = steps; return;}
+      
+      //dfs
+      vector<State> adjacent = here.getAdjacent();
+      for(int i = 0; i < adjacent.size(); ++i)
+         dfs(adjacent[i], finish, steps+1);
+   }   
+   
+   int ids(State start, State finish, int growthStep){
+      for(int limit = 4; ; limit += growthStep){
+         best = limit+1;
+         dfs(start, finish, 0);
+         if(best <= limit) return best;
+      }
+      return -1
+   }
    ```
