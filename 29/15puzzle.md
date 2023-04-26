@@ -1,70 +1,57 @@
-### CHILDRENDAY
-- 목표
-   -  다음 세가지를 만족하는 최소의 자연수 $c$ 찾기
+### 15-PUZZLE
+- 양방향 탐색(bidirectional search)
+   -  시작 정점에서 시작하는 정방향 탐색과 목표 정점에서 반대로 시작하는 역방향 탐색을 동시에 하며, 이 둘이 가운데서 만나면 탐색 종료
+   -  유의사항   
+      다음의 경우 사용하기 어려움
+      - 역방향 간선 파악이 어려운 그래프
+      - 각 정점마다 가능한 역방향 간선이 매우 많아, 역방향 탐색의 분기수가 큰 경우 
+   -  구현
+      - 정방향과 역방향 탐색에서 방문할 정점으로 모두 한 큐에 저장
+      - 최단 거리를 저장할 때 정방향은 양수, 역방향은 음수로
+      - 인접 정점의 상태 검사 결과 부호가 다르면 두 탐색이 만난 것
+      ```
+      class State;
       
-   1. $n+m \leq c$, $n$은 총인원 $m$은 욕심쟁이수
-   2. $c$ mod $n = m$
-   3. $c$는 주어진 $d$에 포함된 숫자들로만 구성됨
-
-- 문제정의
-   -  세번째 조건에 따라 $c$를 앞에서부터 한 자리씩 생성. 현재 숫자 $c$에 $x$를 붙여 다음 숫자를 생성
-      - $c \times 10 + x$
-   -  두번째 조건에 따라 $(c \times 10 + x)$ mod $n = m$인지 확인
-      - 나머지 연산의 분배 법칙에 의해,  
-        $(c \times 10 + x)$ mod $n$ = $((c$ mod $n)\times 10 + x)$ mod $n$  
-        로 정의되고, 그러므로 $c$ mod $n$을 확인하면 됨
-        
-- 그래프 모델링
-   - $c$ mod $n = a$, $(0 \leq a \leq n-1)$  
-   - 정점 $a$와 정점 $a \times 10 + x$ mod $n$을 $x$로 번호 매긴 간선으로 연결
-   - 정점 0에서 정점 m으로 가는 최단경로의 간선 번호를 모아 $c$를 생성
-   - 최단 경로 $c$가 여러 개일 경우 간선 번호가 사전순으로 가장 작은 경우를 선택  
-     $\Rightarrow$ 너비 우선 탐색을 할 때 간선의 번호가 증가하는 순서로 검사해 BFS 스패닝 트리 생성.  
-     스패닝 트리의 경로가 사전순으로 가장 작은 최단 경로임
-
-- 마지막 조건 추가 **완전히 이해하지 못함 
-   - $c$ mod $n = m$에서 $m$은 $n+m$의 $m$을 의미함. $n$번의 나머지 연산이 이뤄진 후에, 계속 $c$에 대해 나머지 연산을 수행하고서 $m$을 만나야함.
-   - 즉, 첫번째 조건  $n+m \leq c$을 만족하기 위해 n으로 나눈 나머지마다 두 개의 정점을 생성
-      - 지금까지 만든 정점 수가 $n$ 미만인 경우
-      - 지금까지 만든 정점 수가 $n$ 이상인 경우  
-      $\Rightarrow$ 지금까지 만든 정점 수가 $n$ 이상이어야 함.  
-      $+$ $n$번 이상에 정점 $m$에 도달할 수 있어야함
+      //부호 반환
+      int sgn(int x) { if(!x) return 0; return x>0 ? 1 :-1; }
+      //x의 절대값 1 증가
+      int incr(int x) { if(x<0) return x-1; return x+1;
       
-```
-def append(here, edge, mod):
-   there = int(str(here*10)[:-2] + str(edge))
-   #회색 정점
-   if there >= mod: return mod + there % mod
-   #흰색 정점
-   return there % mod
+      int bidirectional(State start, State finish){
+         map<State, int> c;
+         queue<State> q;
+         
+         if(start == finish) return 0;
+         
+         //한 큐에 저장, 정방향은 양수 역방향은 음수
+         q.push(start); c[start] = 1;
+         q.push(finish); c[finish] = -1;
+         
+         while(!q.empty()){
+            State here = q.front();
+            q.pop();
+            
+            vector<State> adjacent = here.getAdjacent();
+            for(int i = 0; i < adjacent.size(); ++i){
+               map<State, int>::iterator it = c.find(adjacent[i]);
+               if(it == c.end()){
+                  c[adjacent[i]] == incr(c[here]);
+                  q.push(adjacent[i]);
+               }
+               
+               //인접정점(it)과 현재(here)의 부호가 다르다면 탐색 종료
+               else if(sgn(it->second) != sgn(c[here]))
+                  return abs(it->second) + abs(c[here]) -1;
+            }
+         }
+         
+         return -1
+      }
+      ```
+
+- 점점 깊어지는 탐색(IDS, Iteratively Deepening Search)
+   - 임의의 깊이 제한 $l$을 정한 후, 이 제한보다 짧은 목표 상태까지의 최단 경로가 존재하는지 DFS로 확인. 답을 찾지 못하면 $l$을 늘려서 다시 시도
+   - 구현
+   ```
    
-def gifts(d, n, m):
-   d.sort()
-   parent = [-1]*(2*n)
-   choice = [-1]*(2*n)
-   q = list()
-   
-   parent[0] = 0
-   q.append(0)
-   
-   while q:
-      here = q.pop(0)
-      for i in d:
-         there = append(here, i, n)
-         if parent[there] == -1:
-            parent[there] = here
-            choice[there] = i
-            q.append(there)
-   
-   # n번 이상 정점을 생성하고, m에 도달할 수 있어야 하는데
-   # 그렇지 못했을 때
-   if parent[n+m] == -1: return "IMPOSSIBLE"
-   
-   ret = list()
-   here = n+m
-   while parent[here] != here:
-      ret.append(str(choice[here]))
-      here = parent[here]
-   ret = int(''.join(ret[::-1]))
-   return ret
-```
+   ```
