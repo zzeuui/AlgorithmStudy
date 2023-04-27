@@ -33,6 +33,7 @@ if __name__=='__main__':
         fire = list(map(int, input().split()))
         house = list(map(int, input().split()))
 
+        #this part
         for h in house:
             g[0].append((h, 0))
             g[h].append((0, 0))
