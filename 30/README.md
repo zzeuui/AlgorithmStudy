@@ -101,3 +101,33 @@
       * $dist[a]$: $s$부터 $a$까지의 최단 거리
     - $upper[v]$는 최대 $dist[u]+w(u,v)$ 값을 가질 수 있으므로 해당 값으로 갱신함
     - 위와 같이 $upper[v]$를 갱신하며 감소하는 작업을 $(u,v)$에 따라 완화한다고 표현
+    - 다음 과정을 |V|번 반복
+      - 모든 간선을 하나씩 확인
+      - 최단 거리 upper 갱신
+      - V번 째에도 완화에 성공하면 음수 사이클이 존재함
+    ```
+    #g = {node1: [[node2, weight12], [node3, weight13]...], node2:...}
+    g = collections.defaultdict(list)
+    
+    def bellmanFord(src):
+      upper = [float('inf')]*V
+      upper[src] = 0
+      updated = False
+      
+      for _ in range(V):
+         updated = False
+         for here in range(V):
+            for there, cost in g[here]:
+               if upper[there] > upper[here]+cost:
+                  upper[there] = upper[here]+cost
+                  updated = True
+        
+         #모든 간선 완화 실패할 경우 종료         
+         if !updated: break 
+      
+      #마지막 반복에서도 완화에 성공하면, 음수사이클이 존재함으로
+      #빈 리스트 리턴
+      if updated: upper = list()
+      
+      return upper
+    ```
