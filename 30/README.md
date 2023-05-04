@@ -123,7 +123,7 @@
                   updated = True
         
          #모든 간선 완화 실패할 경우 종료         
-         if !updated: break 
+         if not updated: break 
       
       #마지막 반복에서도 완화에 성공하면, 음수사이클이 존재함으로
       #빈 리스트 리턴
