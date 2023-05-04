@@ -131,3 +131,25 @@
       
       return upper
     ```
+
+### 플로이드(Floyd)의 모든 쌍 최단 거리 알고리즘
+- 구현
+    ```
+    #g = {node1: [[node2, weight12], [node3, weight13]...], node2:...}
+    g = collections.defaultdict(list)
+    
+    def floyd():
+      #초기화
+      dist = [[float('inf')]*V for _ in range(V)]
+      for i in g:
+         dist[i][i] = 0
+         for j, weight in g[i]:
+            dist[i][j] = weight
+      
+      for i in g:
+         for k in g[i]:
+            for j in range(V):
+               dist[i][j] = min(dist[i][j], dist[i][k]+dist[k][j])
+               
+      return dist
+    ```
