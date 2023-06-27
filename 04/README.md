@@ -93,61 +93,62 @@
   print(cnt)
   ```
 
-## 3) 숫자 카드 게임
+## 3) 게임 개발
 - 문제
-  - 가장 높은 숫자가 쓰인 카드 한 장을 뽑는 게임
-  - 행을 먼저 선택하고, 행에 포함된 카드들 중 가장 숫자가 낮은 카드를 뽑아야 함
+  - 바다와 육지로 구성된 NxM 보드, 캐릭터가 반시계 방향으로 회전하며 상하좌우로 이동할 때 캐릭터가 방문한 칸의 개수 구하기
+  - 바다로 이동할 수 없고, 모두 가본 칸이라면 현재 바라보는 방향에서 뒤로 이동. 뒤가 바다라면 움직임을 멈춤
 - 풀이  
-  - 각 행마다 가장 작은 수를 찾은 뒤에 그 수 중에서 가장 큰 수를 찾음
-  ```
-  N, M = map(int, input().split())
-  cards = list()
+```
+n, m = map(int, input().split())
+x, y, d = map(int, input().split())
+board = list()
 
-  # 1
-  for _ in range(N):
-    card = min(list(map(int, input().split())))
-    cards.append(card)
-  print(max(cards))
+for _ in range(m):
+    b = input().split()
+    board.append(b)
 
-  # 2 in book
-  ret = 0
-  for _ in range(N):
-    card = min(list(map(int, input().split())))
-    ret = max(ret, card)
-  print(ret)
-  ```
-## 4) 1이 될 때까지
-- 문제
-  - N이 K로 나눠 떨어지면 N/K를 수행하고 아니면 N-1을 수행
-  - N이 1이 될 때까지 위의 과정을 수행한 횟수
-- 풀이
-  ```
-  N, K = map(int, input().split())
-  ret = 0
+dx = [0, 1, 0, -1]
+dy = [-1, 0, 1, 0]
 
-  # 1
-  while N > 1:
-    if N%K == 0:
-      N /= K
-      ret += 1
-    else:
-      N -= 1
-      ret += 1
-  print(ret)
-  
-  # 2 in book
-  while True:
-    target = (N//K) * K
-    ret += (N - target) # N을 K로 나누었을 때 나머지. 즉, K로 나누기 위해 1씩 빼야할 수
-    N = target
-    #N이 K보다 작을 때(더 이상 나눌 수 없을 때) 반복문 탈출
-    if N < K:
-      break
-    #K로 나누기
-    ret += 1
-    N //= K
+cnt = 1
+board[x][y] = '2'
 
-  #K로 더이상 못 나누는 1씩 빼야할 나머지
-  ret += (N-1)
-  print(ret)
-  ```
+if d == 0: j = 0
+elif d == 1: j = 3
+elif d == 2: j = 2
+elif d == 3: j = 1
+
+length = len(dx)
+
+while True:
+    dx = dx[j:length] + dx[0:j]
+    dy = dy[j:length] + dy[0:j]
+
+    flag = False
+
+    for i in range(length):
+        nx = x + dx[i]
+        ny = y + dy[i]
+
+        if nx >= 0 and nx < m and ny >= 0 and ny < n:
+            if board[nx][ny] == '0':
+                x, y = nx, ny
+                board[nx][ny] = '2'
+                cnt += 1
+                j = i+1
+                flag = True
+                break
+    
+    if not flag:
+        nx = x+dx[1]
+        ny = y+dy[1]
+
+
+        if board[nx][ny] == '2':
+            x, y = nx, ny
+        else:
+            break
+            
+
+print(cnt)
+```
