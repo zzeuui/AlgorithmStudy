@@ -68,52 +68,29 @@
 
 ## 2) 왕실의 나이트 
 - 문제  
-  - N 크기의 주어진 배열을 M번 더해 만들 수 있는 가장 큰 수 구하기. 이때 최대 K번 연속으로 더할 수 있음  
+  - 행 1~8, 열 a~h로 표현되는 8X8 좌표 평면이 주어졌을 때 나이트가 이동할 수 있는 경우의 수 구하기
+  - 나이트는 2가지 경우로 이동 가능
+    - 수평으로 두 칸 이동한 뒤에 수직으로 한 칸 이동하기
+       - 수직으로 두 칸 이동한 뒤에 수평으로 한 칸 이동하기  
   
-- 풀이1  
+- 풀이 
   ```
-  N, M, K = map(int, input().split())
-  nums = list(map(int, input().split()))
-  nums.sort()
-  
-  ret = 0
-  
-  while M > 0:
-    if M >= K:
-      ret += K*nums[-1]
-      M -= K
+  n = input()
+  x, y = ord(n[0]), int(n[1])
+  dx = [2, 2, -2, -2, 1, -1, 1, -1]
+  dy = [-1, 1, -1, 1, -2, -2, 2, 2]
+
+  cnt = 0
+  for mx, my in zip(dx, dy):
+    nx = x + mx
+    ny = y + my
+
+    if nx > ord('h') or nx < ord('a') or ny < 1 or ny > 8:
+        continue
     else:
-      ret += M*nums[-1]
-      break
-  
-    if M == 0:
-      break
-    else:
-      ret += nums[-2]
-      M -= 1
-  
-  print(ret)
-  ```
+        cnt += 1
 
-- 풀이2  
-  - 반복되는 수열 파악. 가장 큰 수와 두번째로 큰 수가 더해질 때 특정한 수열 형태로 일정하게 반복해서 더해지는 특성이 존재
-  - 여기서 반복되는 수열의 길이는 (큰 수를 $K$번 더하는 것 + 두번째로 큰 수를 한 번 더하는 것) = $(K+1)$임  
-  - 수열이 반복되는 횟수 = $M//(K+1)$  
-  - $i_1$ = 가장 큰 수의 등장 횟수 = 수열이 반복되는 횟수* $K$ + 수열이 반복되고 남은 더하기 횟수 = $(M//(K+1))*K + M mod (K+1)$
-  - $i_2$ = 두번째로 큰 수의 등장 횟수 = 전체 더하기 횟수 - 가장 큰수의 등장 횟수 = $M - i_1$
-  - 결과값 = $i_1$ \* 가장 큰 수 + $i_2$ * 두번째로 큰 수  
-  ```
-  N, M, K = map(int, input().split())
-  nums = list(map(int, input().split()))
-  nums.sort()
-
-  count = M//(K+1) * K + M % (K+1)
-
-  ret = 0
-  ret += count * nums[-1]
-  ret += (M - count) * nums[-2]
-
-  print(ret)
+  print(cnt)
   ```
 
 ## 3) 숫자 카드 게임
