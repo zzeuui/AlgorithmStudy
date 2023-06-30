@@ -75,8 +75,8 @@ graph = [[(1,7) (2,5)], #노드 0에 연결된 노드
 $\Rightarrow$ 특정 노드와 연결된 모든 인접 노드를 순회해야하는 경우, 인접 리스트 방식이 메모리 공간 낭비가 적음
 
 #### DFS
-- Depth-First Search, 깊이 우선 탐색이라 부르고, 그래프의 깊은 부분을 우선적으로 탐색하는 알고리즘
-- 스택 자료구조를 이용한 구체적 동작 과정
+- Depth-First Search(깊이 우선 탐색): 그래프의 깊은 부분을 우선적으로 탐색하는 알고리즘
+- 스택을 이용한 동작 과정
   - 탐색 시작 노드를 스택에 삽입하고 방문 처리
   - 스택 최상단 노드에 방문하지 않은 인접 노드가 있으면,해당 인접 노드를 스택에 삽입하고 방문 처리.  
     방문하지 않은 인접 노드가 없다면, 스택에서 최상단 노드 삭제
@@ -94,4 +94,111 @@ visited = [False]*len(graph)
 dfs(start_node)
 ```
 
-####BFS
+#### BFS
+- Breadth First Search(너비 우선 탐색): 가까운 노드부터 탐색하는 알고리즘
+- 큐를 이용한 동작 과정
+  - 탐색 시작 노드를 큐에 삽입하고 방문 처리
+  - 큐에서 노드를 꺼내 해당 인접 노드 중 방문하지 않은 노드 모두 큐에 삽입 후 방문 처리
+  - 위 두 과정을 더 이상 수행할 수 없을 때까지 반복
+  ```
+  from collections import deque
+  graph = [[]] #인접 리스트 표현
+  visited = [False]*len(graph)
+
+  queue = deque()
+  
+  queue.append(start_node)
+  visited[start_node] = True
+
+  while queue:
+    here = queue.leftpop()
+    
+    for nt_node in graph[here]:
+      if not visited[nt_node]:
+        queue.append(nt_node)
+        visited[nt_node] = True
+
+  ```
+
+#### Tip
+- 1차원 배열과 2차원 배열에서의 탐색 문제를 만날 경우 그래프 형식으로 바꾸어 DFS나 BFS로 해결하면 수월함
+  - ex) 2차원 배열의 게임맵에서 캐릭터의 이동 문제
+
+## 3) 음료수 얼려 먹기
+- 문제
+  - N*M 얼음틀이 존재, 0이 얼음틀 1이 칸막이
+  - 0으로 표현된 얼음틀 개수 구하기
+- 풀이
+  - 책: 따로 그래프 표현을 만들지 않고 상하좌우에 바로 재귀적으로 접근
+  ```
+  n, m = map(int, input().split())
+  graph = []
+  for i in range(n):
+    graph.append(list(map, int, input()))
+
+  def dfs(x, y):
+    if x <= -1 or x >= n or y <= -1 or y >= m:
+      return False
+  
+    if graph[x][y] == 0:
+      #방문처리
+      graph[x][y] = 1
+      #상하좌우 재귀적으로 호출
+      dfs(x-1, y)
+      dfs(x, y-1)
+      dfs(x+1, y)
+      dfs(x, y+1)
+      return True 
+
+    return False
+
+  ret = 0
+  for i in range(n):
+    for j in range(m):
+      if dfs(i, j) == True:
+        ret += 1
+  print(ret)
+  ```
+  - 스스로
+  ```
+  from collections import defaultdict
+
+  n, m = map(int, input().split())
+
+  conet = list()
+  for _ in range(n):
+    conet.append(list(input()))
+
+  dxy = [(-1, 0), ( 1, 0), (0, -1), (0, 1)]
+
+  g = defaultdict(list)
+
+  for i in range(n):
+    for j in range(m):
+      if conet[i][j] == '0':
+        g[i*m+j].append((i*m+j))
+        for x, y in dxy:
+          ni, nj = i+x, j+y
+          if ni > -1 and nj > -1 and ni < n and nj < m and conet[ni][nj]=='0':
+            g[i*m+j].append((ni)*m+nj)
+
+  g = {k:set(v) for k, v in g.items()}
+  visited = [False] * (n*m)
+
+  def dfs(here):
+    visited[here] = True
+
+    for nt_node in g[here]:
+      if not visited[nt_node]:
+        dfs(nt_node)
+
+  cnt = 0
+  for k, _ in g.items():
+    if not visited[k]:
+      dfs(k)
+      cnt += 1
+
+  print(cnt)
+  ```
+
+## 4) 미로 탈출
