@@ -159,7 +159,7 @@ dfs(start_node)
         ret += 1
   print(ret)
   ```
-  - 스스로
+  - 스스로: 부분 그래프 구하기는 바로 떠오르고 금방 작성했는데 그래프 표현 구현한다고 한 시간 걸림,,
   ```
   from collections import defaultdict
 
@@ -202,3 +202,49 @@ dfs(start_node)
   ```
 
 ## 4) 미로 탈출
+- 문제
+  - N*M: 0은 괴물, 1은 길
+  - 괴물을 피해 상하좌우로 이동할 때 (1, 1)에서 (N, M)까지 가는 최단 경로 구하기
+  - 시작칸과 마지막 칸까지 경로에 포함
+- 풀이
+  - 책: 어차피 graph가 0과 1로 이뤄진 인접 행렬 표현의 그래프로 주어지기 때문에 나처럼 따로 distance 배열을 만들지 않고 graph에서 더해가는 씩으로 진행함. 이렇게 할 경우 graph의 길로 표시된 '1'이 거리로 바뀌기 때문에 방문 여부도 따로 처리할 필요 없음.
+  ```
+  ...
+  #해당 노드를 처음 방문한 경우 최단 거리 기록
+  if graph[nx][ny] == 1:
+    graph[nx][ny] = graph[x][y] + 1
+    queue.append((nx, ny))
+  ...
+  ```
+  - 스스로: 3번 문제에서 배운대로 graph에 바로 방문 표시는 했는데, distance는 따로 저장함. 시간 안에 풀음.
+  ```
+  from collections import deque
+
+  n, m = map(int, input().split())
+  g = list()
+  for _ in range(n):
+    g.append(list(input()))
+
+  distance = [[0]*m for _ in range(n)]
+
+  queue = deque()
+  queue.append((0, 0))
+  g[0][0] = '0'
+
+  while queue:
+    x, y = queue.popleft()
+
+    for i in [1, -1]:
+      nx, ny = x+i, y+i
+      if nx > -1 and nx < n and g[nx][y] == '1':
+        g[nx][y] = '0'
+        queue.append((nx, y))
+        distance[nx][y] = distance[x][y] + 1
+
+      if ny > -1 and ny < m and g[x][ny] == '1':
+        g[x][ny] = '0'
+        queue.append((x, ny))
+        distance[x][ny] = distance[x][y] + 1
+
+  print(distance[n-1][m-1] + 1)
+  ``` 
