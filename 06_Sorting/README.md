@@ -136,8 +136,6 @@ ret = sorted(array, key=setting)
 
     if a[a_ind] < b[b_ind]:
       a[a_ind], b[b_ind] = b[b_ind], a[a_ind]
-    else:
-      break
 
   # 2 in book
   a.sort()
