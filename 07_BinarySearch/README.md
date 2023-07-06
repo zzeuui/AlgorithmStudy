@@ -100,6 +100,10 @@ print(input().rstrip())
     if ns[mid] == t: return True
     elif ns[mid] > t: return binary_search(t, start, mid-1)
     else: return binary_search(t, mid+1, end)
+
+  for t in ms:
+    if binary_earch(t, 0, n-1): print('yes', end=' ')
+    else: print('no', end=' ')
   ```
   - 계수 정렬
   ```
