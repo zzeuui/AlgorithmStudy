@@ -1,102 +1,46 @@
-"""
-오답
-정확성: 30.0
-합계: 30.0 / 100.0
-"""
+def rotate_a_matrix_by_90_degree(a):
+    n = len(a)
+    m = len(a[0])
 
-import copy
+    result = [[0] * n for _ in range(m)]
+    for i in range(n):
+        for j in range(m):
+            result[j][n-i-1] = a[i][j]
 
-def check_kl(key, lock):
-    key = [e for ele in key for e in ele]
-    lock = [e for ele in lock for e in ele]
-    
-    for k, l in zip(key, lock):
-        if k+l != 1:
-            return False
-        
+    return result
+
+#자물쇠의 중간부분이 모두 1인지 확인
+def check(new_lock):
+    lock_length = len(new_lock) // 3
+    for i in range(lock_length, lock_length*2):
+        for j in range(lock_length, lock_length*2):
+            if new_lock[i][j] != 1:
+                return False
     return True
-    
-def move_key(key, mode):
-    """
-    mode:
-        0(int): right
-        M(int): left
-        U(str): up
-        D(str): down
-    """
-    ret = list()
-    M = len(key[0])
-    if mode == 'U':
-        ret = key[1:]
-        ret.insert(M, [0]*M)
-    elif mode == 'D':
-        ret = key[:-1]
-        ret.insert(0, [0]*M)
-    else:
-        for ele in key:
-            ele.insert(mode, 0)
-            if mode == 0:
-                ret.append(ele[:-1])
-            else:
-                ret.append(ele[1:])
-        
-    return ret
-
-def rotate_key(key):
-    """
-    rotate right
-    """
-    M = len(key[0])
-    ret = list()
-    for col in range(M):
-        temp = list()
-        for row in range(M):
-            temp.insert(0, key[row][col])
-            
-        ret.append(temp)
-        
-    return ret
-
-def one_action(key, lock, mode):
-    if mode == 'R':
-        key = rotate_key(key)
-    else:
-        key = move_key(key, mode)
-    
-    return key, check_kl(key, lock)
-
-def one_iter(key, lock, mode, M):
-    for _ in range(M-1):
-        key, answer = one_action(key, lock, mode)
-        yield key, answer
-
-def each_case(key, lock, mode, M):
-    answer = False
-    for key, answer in one_iter(key, lock, mode, M):
-        if answer: return answer
-        for m in ['U', 'D']:
-            for _, answer in one_iter(key, lock, m, M):
-                if answer: return answer
-            
-    return answer
 
 def solution(key, lock):
-    M = len(key[0])
-    answer = False
+    n = len(lock)
+    m = len(key)
+    # 자물쇠의 크기를 기존의 3배로 변환
+    new_lock =  [[0]*(n*3) for _ in range(n*3)]
+    # 새로운 자물쇠의 중앙부분에 기존의 자물쇠 넣기
+    for i in range(n):
+        for j in range(n):
+            new_lock[i+n][j+n] = lock[i][j]
+
+    for rotation in range(4):
+        key = rotate_a_matrix_by_90_degree(key)
+        for x in range(n*2):
+            for y in range(n*2):
+                for i in range(m):
+                    for j in range(m):
+                        new_lock[x+i][y+j] += key[i][j]
+
+                if check(new_lock) == True:
+                    return True
+
+                for i in range(m):
+                    for j in range(m):
+                        new_lock[x+i][y+j] -= key[i][j]
     
-    #90도씩 시계방향으로 4번 회전
-    for _ in range(4):
-        key, answer = one_action(key, lock, 'R')
-        if answer: return answer
-        
-        for m in ['U', 'D']:           
-            for _, answer in one_iter(key, lock, m, M):
-                if answer: return answer
-        
-        ori_key = copy.deepcopy(key)
-        for m in [0, M]:
-            key = copy.deepcopy(ori_key)
-            answer = each_case(key, lock, m, M)
-            if answer: return answer
-        
-    return answer 
+    return False
