@@ -4,3 +4,4 @@
 
 1. [약수의 합](https://github.com/zzeuui/AlgorithmStudy/blob/master/baekjoon/%EC%95%BD%EC%88%98%EC%9D%98%20%ED%95%A9(17425%2C%20%EA%B3%A84).md)
 2. [골드바흐의 추측](https://github.com/zzeuui/AlgorithmStudy/blob/master/baekjoon/%EA%B3%A8%EB%93%9C%EB%B0%94%ED%9D%90%EC%9D%98%20%EC%B6%94%EC%B8%A1(6588%2C%20%EC%8B%A41).md)  
+3. [사탕 게임](https://github.com/zzeuui/AlgorithmStudy/blob/master/baekjoon/%EC%82%AC%ED%83%95%20%EA%B2%8C%EC%9E%84(3085%2C%20%EC%8B%A42).md)
