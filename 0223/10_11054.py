@@ -18,8 +18,14 @@ if __name__=='__main__':
                 dp_dec[i] = dp_dec[j]+1
     dp_dec = dp_dec[::-1]
 
-    ret = list()
-    for i in range(n-1):
-        ret.append(dp_inc[i]+max(dp_dec[i+1:]))
+    nums = nums[::-1]
+    if max(dp_inc) == 1 and max(dp_dec) == 1:
+        print(1)
+    else:
+        ret = 0
+        for i in range(n-1):
+            for j in range(i+1, n):
+                if nums[i] != nums[j]:
+                    ret = max(ret, dp_inc[i]+dp_dec[j])
 
-    print(max(ret))
+        print(ret)
